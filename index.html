@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>BudgieNet</title>
+        <title>Collection Levels</title>
 
         <style>
             body{background-color: lightgray;}
@@ -17,52 +17,17 @@
         </div>
 
         <div id="content">
-            <div style="display: flex; gap: 5px;">
-                <p>Last Updated: </p>
-                <p id="last-updated" style="font-weight: bold;"></p>
-            </div>
-
-            <div style="display: flex; gap: 5px">
-                <input type="text" id="item-name-input" placeholder="Item Name"></input>
-                <input type="text" id="seller-name-input" placeholder="Seller Name"></input>
-                <input type="text" id="shop-id-input" placeholder="Shop ID"></input>
-                <input type="checkbox" id="buy" checked="true">Buy</input>
-                <input type="checkbox" id="sell" checked="true">Sell</input>
-                <input type="checkbox" id="oos" checked="false">Out of Stock</input>
-                <input type="checkbox" id="shop-estimate" checked="true">Shop Estimates</input>
-                <select id="sort-mode">
-                    <option value="price-low-to-high">Price (Low to High)</option>
-                    <option value="price-high-to-low">Price (High to Low)</option>
-                    <option value="stock-low-to-high">Stock (Low to High)</option>
-                    <option value="stock-high-to-low">Stock (High to Low)</option>
-                </select>
-                <div style="height: 0px;">
-                    <p style="position: relative; bottom: 14px; left: 10px;">Some shop locations are just estimates. This is indicated with a "*" at the end of the Shop ID</p>
-                </div>
-            </div>
 
             <div style="display: flex; gap: 5px; height: 40px;">
                 <div style="width: 35px; height:40px;"></div>
                 <div style="width: 140px; height:40px;">
-                    <p>Type</p>
-                </div>
-                <div style="width: 50px; height:40px;">
-                    <p>Stock</p>
-                </div>
-                <div style="width: 150px; height:40px;">
-                    <p>Seller</p>
+                    <p>Level</p>
                 </div>
                 <div style="width: 350px; height:40px;">
-                    <p>Item</p>
+                    <p>Reward</p>
                 </div>
-                <div style="width: 100px; height:40px;">
-                    <p>Price</p>
-                </div>
-                <div style="width: 100px; height:40px;">
-                    <p>Shop</p>
-                </div>
-                <div style="width: 200px; height:40px;">
-                    <p>Position</p>
+                <div style="width: 150px; height:40px;">
+                    <p>Amount</p>
                 </div>
             </div>
 
@@ -74,120 +39,113 @@
         </div>
 
         <script>
-
-            var jsonData = "";
+            var rewards = [];
 
             function updateList()
             {
                 var list = document.getElementById("list");
-
                 list.innerHTML = "";
 
-                var possibleJsons = [];
+                rewards.forEach(element => {
 
-                var itemSearch = document.getElementById("item-name-input").value.toLowerCase();
-                var sellerSearch = document.getElementById("seller-name-input").value.toLowerCase();
-                var shopSearch = document.getElementById("shop-id-input").value.toLowerCase();
-                var buy = document.getElementById("buy").checked;
-                var sell = document.getElementById("sell").checked;
-                var outofstock = document.getElementById("oos").checked;
-                var estimates = document.getElementById("shop-estimate").checked;
+                    var image = "";
+                    var text = "";
 
-                jsonData.data.forEach(element => {
-                    if (element["type"] == "Buy" && !buy)
-                        return;
+                    text = element["reward"];
 
-                    if (element["type"] == "Sell" && !sell)
-                        return;
+                    if (text == '"Diamonds"') image = "assets/gems.webp";
+                    if (text == '"WildcardCommon"') image = "assets/wildcard_common.png";
+                    if (text == '"WildcardRare"') image = "assets/wildcard_rare.png";
+                    if (text == '"WildcardEpic"') image = "assets/wildcard_epic.png";
+                    if (text == '"WildcardLegendary"') image = "assets/wildcard_legendary.png";
+                    if (text == '"WildcardChampion"') image = "assets/wildcard_champion.png";
+                    if (text == '"ChampionLuckyDrop"') image = "assets/Item_Lucky_Drop_Legendary_01.png";
+                    if (text == '"LegendaryLuckyDrop_NoUpgrade"') image = "assets/Item_Lucky_Drop_Legendary_02.png";
+                    if (text == '"EVO_Shard_5Star"') image = "assets/5starevo.png";
 
-                    if (element["type"] == "Out of Stock" && !outofstock)
-                        return;
-
-                    if (element["estimate"] && !estimates)
-                        return;
-
-                    if (!element["item-name"].toLowerCase().includes(itemSearch))
-                        return;
-
-                    if (!element["seller"].toLowerCase().includes(sellerSearch))
-                        return;
-
-                    if (shopSearch != "")
-                        if (element["shop-id"] != shopSearch)
-                            return;
-
-                    possibleJsons.push(element);
-                });
-
-                var sortMode = document.getElementById("sort-mode").value;
-
-                console.log(`sort mode: ${sortMode}`);
-
-                if (sortMode == "price-low-to-high")
-                    possibleJsons.sort((a, b) => a["price"] - b["price"]);
-
-                if (sortMode == "price-high-to-low")
-                    possibleJsons.sort((a, b) => b["price"] - a["price"]);
-
-                if (sortMode == "stock-low-to-high")
-                    possibleJsons.sort((a, b) => a["stock"] - b["stock"]);
-
-                if (sortMode == "stock-high-to-low")
-                    possibleJsons.sort((a, b) => b["stock"] - a["stock"]);
-
-                possibleJsons.forEach(element => {
                     var stri =
                     `<div style="display: flex; gap: 5px; height: 40px;">
                         <div style="width: 140px; height:40px;">
-                            <p>${element["type"]}</p>
-                        </div>
-                        <div style="width: 50px; height:40px;">
-                            <p>${element["stock"]}</p>
-                        </div>
-                        <div style="width: 150px; height:40px;">
-                            <p>${element["seller"]}</p>
+                            <p>${element["level"]}</p>
                         </div>
                         <div style="width: 350px; height:40px;">
-                            <p>${element["item-name"]}</p>
+                            ${image.length > 0 ?
+                                `<img src="${image}" style="max-height: 35px; width: auto;"></img>` :
+                                `<p>${text}</p>`}
                         </div>
-                        <div style="width: 100px; height:40px;">
-                            <p>$${element["price"]}</p>
-                        </div>
-                        <div style="width: 100px; height:40px;">
-                            <p>${element["shop-id"]}${element["estimate"] ? "*" : ""}</p>
-                        </div>
-                        <div style="width: 200px; height:40px;">
-                            <p>xyz(${element["x"]}, ${element["y"]}, ${element["z"]})</p>
+                        <div style="width: 150px; height:40px;">
+                            <p>${element["amount"]}</p>
                         </div>
                     </div>`;
 
                     const cell = document.createElement('div');
                     cell.innerHTML = stri;
-                    90
+
                     list.appendChild(cell.firstElementChild);
                 });
             }
 
-            function loaded(json)
+            function loaded(data)
             {
-                jsonData = json;
-
                 document.getElementById("loading").style.visibility = "hidden";
                 document.getElementById("content").style.visibility = "visible";
 
-                const lastUpdatedDate = new Date(json["last-updated"]);
+                const lines = data.split("\n");
 
-                const formattedDate = lastUpdatedDate.toLocaleString("en-US", {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    second: "2-digit",
-                    hour12: true
+                const keys = lines[0].split(",");
+
+                var iter = 0;
+                lines.forEach(line => {
+                    iter++;
+
+                    if (iter <= 2)
+                        return;
+
+                    const parts = line.split(",");
+
+                    rewards.push(
+                    {
+                        "level": parts[keys.indexOf('"RequiredLevel"')],
+                        "reward": parts[keys.indexOf('"Resource"')] || parts[keys.indexOf('"Consumable"')] || parts[keys.indexOf('"MysteryBox"')] || parts[keys.indexOf('"Banner"')],
+                        "isKey": parts[keys.indexOf('"IsKey"')],
+                        "amount": parts[keys.indexOf('"Amount"')],
+                        "chest": parts[keys.indexOf('"Chest"')],
+                        "token": parts[keys.indexOf('"Token"')],
+                        "consumable": parts[keys.indexOf('"Consumable"')],
+                        "mysteryBox": parts[keys.indexOf('"MysteryBox"')],
+                        "chestArena": parts[keys.indexOf('"ChestArena"')],
+                        "evoShard": parts[keys.indexOf('"EvoShard"')],
+                        "rulerCard": parts[keys.indexOf('"RulerCard"')],
+                        "skinSet": parts[keys.indexOf('"SkinSet"')],
+                        "emoteIDHigh": parts[keys.indexOf('"EmoteIDHigh"')],
+                        "emoteIDLow": parts[keys.indexOf('"EmoteIDLow"')],
+                    });
+
+                    /*rewards.push(
+                    {
+                        "name": parts[keys.indexOf('"Name"')],
+                        "level": parts[keys.indexOf('"RequiredLevel"')],
+                        "isKey": parts[keys.indexOf('"IsKey"')],
+                        "amount": parts[keys.indexOf('"Amount"')],
+                        "spell": parts[keys.indexOf('"Spell"')],
+                        "spellAlt": parts[keys.indexOf('"SpellAlt"')],
+                        "resource": parts[keys.indexOf('"Resource"')],
+                        "chest": parts[keys.indexOf('"Chest"')],
+                        "token": parts[keys.indexOf('"Token"')],
+                        "consumable": parts[keys.indexOf('"Consumable"')],
+                        "supportCard": parts[keys.indexOf('"SupportCard"')],
+                        "supportCardAlt": parts[keys.indexOf('"SupportCardAlt"')],
+                        "randomSupportCard": parts[keys.indexOf('"RandomSupportCard"')],
+                        "mysteryBox": parts[keys.indexOf('"MysteryBox"')],
+                        "chestArena": parts[keys.indexOf('"ChestArena"')],
+                        "evoShard": parts[keys.indexOf('"EvoShard"')],
+                        "rulerCard": parts[keys.indexOf('"RulerCard"')],
+                        "skinSet": parts[keys.indexOf('"SkinSet"')],
+                        "emoteIDHigh": parts[keys.indexOf('"EmoteIDHigh"')],
+                        "emoteIDLow": parts[keys.indexOf('"EmoteIDLow"')],
+                        "banner": parts[keys.indexOf('"Banner"')],
+                    });*/
                 });
-
-                document.getElementById("last-updated").textContent = formattedDate;
 
                 updateList();
             }
@@ -200,22 +158,13 @@
             document.getElementById("loading").style.visibility = "visible";
             document.getElementById("content").style.visibility = "hidden";
 
-            document.getElementById("item-name-input").addEventListener("input", onEventUpdateList);
-            document.getElementById("seller-name-input").addEventListener("input", onEventUpdateList);
-            document.getElementById("shop-id-input").addEventListener("input", onEventUpdateList);
-            document.getElementById("buy").addEventListener("change", onEventUpdateList);
-            document.getElementById("sell").addEventListener("change", onEventUpdateList);
-            document.getElementById("oos").addEventListener("change", onEventUpdateList);
-            document.getElementById("shop-estimate").addEventListener("change", onEventUpdateList);
-            document.getElementById("sort-mode").addEventListener("change", onEventUpdateList);
-
             fetch("https://raw.githubusercontent.com/TheSillyDoggo/collectionlevels/refs/heads/main/collection_levels.csv")
                 .then((res) => {
                     if (!res.ok) {
                         throw new Error
                             (`HTTP error! Status: ${res.status}`);
                     }
-                    return res.json();
+                    return res.text();
                 })
                 .then((data) =>
                     loaded(data)
